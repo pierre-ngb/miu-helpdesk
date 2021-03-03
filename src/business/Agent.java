@@ -1,5 +1,5 @@
 package business;
 
-public class Agent {
+public class Agent implements User{
 
 }
