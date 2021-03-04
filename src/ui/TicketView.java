@@ -28,6 +28,12 @@ public class TicketView {
 	        this.status = status;
 	        
 	    }
+		
+		public TicketView(String title, String description) {
+	        this.title = title;
+	        this.description = description;
+	        
+	    }
 
 	    public String getFirstTitle() {
 	        return title;

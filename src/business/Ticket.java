@@ -9,17 +9,39 @@ public class Ticket {
 	private Manager manager;
 	private Status status;
 	private String solution;
+	private int id;
 	
-	public Ticket(String title,	String description,User c) {
+	private String ownerId;///////////////////
+	
+	public Ticket(int id,String title,	String description,User c) {
+		this.id=id;
 		this.title = title;
 		this.description = description;
 		this.client = (Client) c;	
 	}
 	
-	void setAgent(Agent a) {
-		agent = a;
-		//updateTicket(this);
+	public Ticket(int id,String title,	String description,Agent c) {
+		this.id=id;
+		this.title = title;
+		this.description = description;
+		this.agent =  c;	
+		
 	}
+	
+
+	
+     public Ticket(int id, String title, String description, String c) {
+    	 this.id=id;
+ 		this.title = title;
+ 		this.description = description;
+ 		this.ownerId = c;	
+	}
+
+	public int getId() {
+    	 return this.id;
+     }
+     
+	
 	public String getTitle() {
 		return title;
 	}	
@@ -28,6 +50,11 @@ public class Ticket {
 	}
 	public Agent getAgent() {
 		return agent;
+		
+	}
+	
+	public void setAgent(Agent agent) {
+		this.agent=agent;
 	}
 	public void setManager(Manager m) {
 		manager = m ;

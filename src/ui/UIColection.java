@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.mysql.cj.conf.ConnectionUrl.Type;
+
 import business.Agent;
 import business.Client;
 import business.Manager;
@@ -27,6 +29,8 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -53,66 +57,69 @@ public class UIColection  {
 
 	
 	
-	public static Scene formScene() {
+	public static Scene formScene(Ticket t) {
 		
 		
 		Label label= new Label("Ticket");
-		label.setStyle("-fx-font-size:20");
+		label.setStyle("-fx-font-size:16");
 	
 		
-		Label label1 = new Label("Ticket Id: ");
-		label1.setStyle("-fx-font-size:20");
-		Label labelb1 = new Label("548744");
-		
 		Label label2 = new Label("Ticket Id: ");
-		label2.setStyle("-fx-font-size:20");
-		Label labelb2 = new Label("548744");
+		label2.setStyle("-fx-font-size:16");
+		Label labelb2 = new Label(t.getId()+"");
 
 		Label label3 = new Label("Title: ");
-		label3.setStyle("-fx-font-size:20");
-		Label labelb3 = new Label("548744");
+		label3.setStyle("-fx-font-size:16");
+		Label labelb3 = new Label(t.getTitle());
 		
 
 		Label label4 = new Label("Descriptin: ");
-		label3.setStyle("-fx-font-size:20");
+		label3.setStyle("-fx-font-size:16");
 
-		TextArea labelb4=new TextArea("fjkog ksadjfkasd asgjkdojrjdfkjsdgass desadf");
+		TextArea labelb4=new TextArea(t.getDescription());
 		labelb4.setDisable(true);
 
 
 		 
 		
-		
 		Separator separator = new Separator(Orientation.HORIZONTAL);
 		
 		Label label5 = new Label("Assigned TO: ");
-		label5.setStyle("-fx-font-size:20");
-		Label labelb5 = new Label(" dkasdj ");
+		label5.setStyle("-fx-font-size:16");
+		
+		
+		Label labelb5 = new Label();
+		if(t.getAgent()!=null)
+		labelb5.setText(t.getAgent().getFirstName()+" "+t.getAgent().getLastName());
+		
 
 		Label label6 = new Label("Assigned By: ");
-		label6.setStyle("-fx-font-size:20");
+		label6.setStyle("-fx-font-size:16");
 		Label labelb6 = new Label("548744");
 		
 		
 
 		Label label7 = new Label("Status: ");
 		label7.setStyle("-fx-font-size:20");
-		Label labelb7 = new Label("548744");
+		Label labelb7 = new Label("Open");
 		
 
 		Label label8 = new Label("Solution: ");
-		label8.setStyle("-fx-font-size:20");
+		label8.setStyle("-fx-font-size:16");
 		
-		TextArea labelb8=new TextArea("fjkog ksadjfkasd asgjkdojrjdfkjsdgass desadf");
+		TextArea labelb8=new TextArea();
+		if(t.getSolution()!=null)
+		labelb8.setText(t.getSolution());	
 		labelb8.setDisable(true);
-
+		labelb8.setStyle("-fx-text-color:red");
+		
 		GridPane gridPane = new GridPane();
 		
-		gridPane.add(label1, 0, 0, 1, 1);
+
 		gridPane.add(label2, 0, 1, 1, 1);
 		gridPane.add(label3, 0, 2, 1, 1);
 		
-		gridPane.add(labelb1, 1, 0, 1, 1);
+		
 		gridPane.add(labelb2, 1, 1, 1, 1);
 		gridPane.add(labelb3, 1, 2, 1, 1);
 		
@@ -176,67 +183,84 @@ public class UIColection  {
 		label.setPadding(new Insets(20));
 	
 		
-		
+
 		 TableView<TicketView> tableView = new TableView<TicketView>();
 
-		 TableColumn<TicketView, String> firstColumn = new TableColumn<>("Ticet Id");
-		 firstColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+		 TableColumn<TicketView, String> Column1 = new TableColumn<>("Title");
+		 Column1.setCellValueFactory(new PropertyValueFactory<>("title"));
 
-		 TableColumn<TicketView, String> secondColumn = new TableColumn<>("Title");
-		 secondColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+		 TableColumn<TicketView, String> Column2 = new TableColumn<>("Description");
+		 Column2.setCellValueFactory(new PropertyValueFactory<>("description"));
+	
 
-		 TableColumn<TicketView, String> thirdColumn = new TableColumn<>("Title");
-		 thirdColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+		    tableView.getColumns().add(Column1);
+		    tableView.getColumns().add(Column2);
 		 
-
-		    tableView.getColumns().add(firstColumn);
-		    tableView.getColumns().add(secondColumn);
-		    tableView.getColumns().add(thirdColumn);
 		    
-		 /*   
-		 new DataAccessFacade().getAllTickets().stream().forEach(t->{
+		    
+		 Session.user.getTickets().stream().forEach(t->{
 			 	tableView.getItems().add(new TicketView(t.getTitle(), t.getDescription()));
-		 	});*/
+		 	});
 		 
-		 tableView.getItems().add(new TicketView("John", "Doe kjsajg djsagodjkjgksdj agjkdjfjasgdd","max"));
-		 tableView.getItems().add(new TicketView("Jane", "Deer jgksad fkdjgd,a jdgodasdf dgjsdigkjsd","dran"));
 		 
-		 tableView.setPlaceholder(new Label("No ticket to display"));
-		 tableView.setMinWidth(500);	 
+		 
+	 tableView.setPlaceholder(new Label("No ticket to display"));
+	 tableView.setMinWidth(450);
+		 
+
+		//PropertyValueFactory<Object, Object> factory = new PropertyValueFactory<>("firstName");
+		 
+		 TableViewSelectionModel<TicketView> selectionModel = tableView.getSelectionModel();
+		 
+		// set selection mode to only 1 row
+		 selectionModel.setSelectionMode(SelectionMode.SINGLE);
+		 
 
 		
 		Button btn1 = new Button("View Detail");
 		Button btn2 = new Button("Assign");
 		
+		
+		
 		btn1.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-            	Stage secondaryStage=new Stage();
-            	secondaryStage.setScene(UIColection.formScene());
-            	secondaryStage.setResizable(false);
-            	secondaryStage.setTitle("MIU help desk");
-            	secondaryStage.show();
-            	
-            	
-            	
-            	
-            }
-        });
+	        @Override
+	        public void handle(ActionEvent event) {
+	        try {
+	        	Stage secondaryStage=new Stage();
+	        	secondaryStage.setScene(UIColection.formScene(Session.user.getTickets().get(selectionModel.getSelectedIndex())));
+	        	secondaryStage.setResizable(false);
+	        	secondaryStage.setTitle("MIU help desk");
+	        	secondaryStage.show();
+	        	
+	        }
+	    	catch (ArrayIndexOutOfBoundsException e)
+	    	{
+	    		alert("select a ticket");
+	    	} 
+	        	
+	        	
+	        }
+	    });
 		
 		btn2.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-            	Stage secondaryStage=new Stage();
-            	secondaryStage.setScene(UIColection.assignScene());
-            	secondaryStage.setResizable(false);
-            	secondaryStage.setTitle("MIU help desk");
-            	secondaryStage.show();
-            	
-            	
-            	
-            	
-            }
-        });
+	        @Override
+	        public void handle(ActionEvent event) {
+	        try {
+	        	Stage secondaryStage=new Stage();
+	        	secondaryStage.setScene(UIColection.assignScene(Session.user.getTickets().get(selectionModel.getSelectedIndex())));
+	        	secondaryStage.setResizable(false);
+	        	secondaryStage.setTitle("MIU help desk");
+	        	secondaryStage.show();
+	        	
+	        }
+	    	catch (ArrayIndexOutOfBoundsException e)
+	    	{
+	    		alert("select a ticket");
+	    	} 	
+	        	
+	        	
+	        }
+	    });
 		
 		HBox buttonBox = new HBox(15);     // sets spacing
 		buttonBox.getChildren().addAll(btn1,btn2);
@@ -267,7 +291,7 @@ public class UIColection  {
 		vbox3.getChildren().addAll(label, finalBox);
 		
 		
-		return new Scene(vbox3,700,500);
+		return new Scene(vbox3);
 	}
 	
 	
@@ -298,7 +322,7 @@ public static Scene clientScene() {
 		
 		
 		
-		ListView<HBox> ticketListView= new ListView<HBox>();////
+		
 		 TableView<TicketView> tableView = new TableView<TicketView>();
 
 		 TableColumn<TicketView, String> Column1 = new TableColumn<>("Title");
@@ -306,19 +330,15 @@ public static Scene clientScene() {
 
 		 TableColumn<TicketView, String> Column2 = new TableColumn<>("Description");
 		 Column2.setCellValueFactory(new PropertyValueFactory<>("description"));
-		 
-		 TableColumn<TicketView, String> Column3 = new TableColumn<>("Status");
-		 Column3.setCellValueFactory(new PropertyValueFactory<>("status"));
-		 
+	
 
 		    tableView.getColumns().add(Column1);
 		    tableView.getColumns().add(Column2);
-		    tableView.getColumns().add(Column3);
+		 
 		    
 		    
-		 Client c=Session.client;
-		 c.getTickets().stream().forEach(t->{
-			 	tableView.getItems().add(new TicketView(t.getTitle(), t.getDescription(),t.getStatus().toString()));
+		 Session.user.getTickets().stream().forEach(t->{
+			 	tableView.getItems().add(new TicketView(t.getTitle(), t.getDescription()));
 		 	});
 		 
 		 
@@ -333,8 +353,7 @@ public static Scene clientScene() {
 		// set selection mode to only 1 row
 		 selectionModel.setSelectionMode(SelectionMode.SINGLE);
 		 
-		 ObservableList<TicketView> selectedItems = selectionModel.getSelectedItems();
-		 System.out.println(selectedItems);
+		 
 		 
 		// selectionModel.clearSelection();
 		 
@@ -344,21 +363,7 @@ public static Scene clientScene() {
 		l.add("Thne tws");
 		l.add("Foune tws");
 
-		for (Iterator<String> iterator = l.iterator(); iterator.hasNext();) {
-			HBox i=new HBox(12);
-			Label li= new Label(iterator.next());
-			HBox i2=new HBox(12);
-			Label li2= new Label("on");
-
-			i2.setAlignment(Pos.BASELINE_RIGHT);
-			i2.setStyle("-fx-background-color: #0000ff;"+"-fx-width:100%");
-			i2.getChildren().addAll(li2);
-			
-			i.getChildren().addAll(li,i2);
-			
-			ticketListView.getItems().add(i);
-			
-		}
+	
 		
 		
 		//HBox finalList=new HBox(tableView);
@@ -370,13 +375,17 @@ public static Scene clientScene() {
 		btn1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+            	try {
             	Stage secondaryStage=new Stage();
-            	secondaryStage.setScene(UIColection.formScene());
+            	secondaryStage.setScene(UIColection.formScene(Session.user.getTickets().get(selectionModel.getSelectedIndex())));
             	secondaryStage.setResizable(false);
             	secondaryStage.setTitle("MIU help desk");
             	secondaryStage.show();
-            	
-            	
+            	}
+            	catch (ArrayIndexOutOfBoundsException e)
+            	{
+            		alert("select a ticket");
+            	}            	
             	
             	
             }
@@ -388,6 +397,9 @@ public static Scene clientScene() {
 		btn2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+            	
+            	
+            
             	Stage secondaryStage=new Stage();
             	secondaryStage.setScene(UIColection.createScene());
             	secondaryStage.setResizable(false);
@@ -429,35 +441,35 @@ public static Scene ajentScene() {
 	
 	
 	
+
 	ListView<HBox> ticketListView= new ListView<HBox>();////
-	 TableView<Person> tableView = new TableView<Person>();
+	 TableView<TicketView> tableView = new TableView<TicketView>();
 
-	 TableColumn<Person, String> firstNameColumn = new TableColumn<>("Ticet Id");
-	 firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("FirstName"));
+	 TableColumn<TicketView, String> Column1 = new TableColumn<>("Title");
+	 Column1.setCellValueFactory(new PropertyValueFactory<>("title"));
+
+	 TableColumn<TicketView, String> Column2 = new TableColumn<>("Description");
+	 Column2.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+
+	    tableView.getColumns().add(Column1);
+	    tableView.getColumns().add(Column2);
 	 
-	 TableColumn<Person, String> lastNameColumn = new TableColumn<>("Title`1111111");
-	 lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+	    
+	    
+	 Session.user.getTickets().stream().forEach(t->{
+		 	tableView.getItems().add(new TicketView(t.getTitle(), t.getDescription()));
+	 	});
+	 
+	 
+	 tableView.setPlaceholder(new Label("No ticket to display"));
+	 
+	 TableViewSelectionModel<TicketView> selectionModel = tableView.getSelectionModel();
 	 
 
-	    tableView.getColumns().add(firstNameColumn);
-	    tableView.getColumns().add(lastNameColumn);
-	 
-	 tableView.getItems().add(new Person("John", "Doe","asdf"));
-	 tableView.getItems().add(new Person("Jane", "Deer","asdfd"));
-	 
-//	 tableView.setPlaceholder(new Label("No rows to display"));
+	 selectionModel.setSelectionMode(SelectionMode.SINGLE);
 	 
 
-	/* PropertyValueFactory<Object, Object> factory = new PropertyValueFactory<>("firstName");
-	 
-	 TableViewSelectionModel<Person> selectionModel = tableView.getSelectionModel();*/
-	 
-	/*// set selection mode to only 1 row
-	 selectionModel.setSelectionMode(SelectionMode.SINGLE);*/
-	 
-	 //ObservableList<Person> selectedItems = selectionModel.getSelectedItems();
-	 
-	// selectionModel.clearSelection();
 	 
 	List<String> l=new ArrayList<String>();
 	l.add("one tws");
@@ -490,13 +502,18 @@ public static Scene ajentScene() {
 	btn1.setOnAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
+        try {
         	Stage secondaryStage=new Stage();
-        	secondaryStage.setScene(UIColection.formScene());
+        	secondaryStage.setScene(UIColection.formScene(Session.user.getTickets().get(selectionModel.getSelectedIndex())));
         	secondaryStage.setResizable(false);
         	secondaryStage.setTitle("MIU help desk");
         	secondaryStage.show();
         	
-        	
+        }
+    	catch (ArrayIndexOutOfBoundsException e)
+    	{
+    		alert("select a ticket");
+    	} 
         	
         	
         }
@@ -505,13 +522,18 @@ public static Scene ajentScene() {
 	btn2.setOnAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
+        try {
         	Stage secondaryStage=new Stage();
-        	secondaryStage.setScene(UIColection.solutionScene());
+        	secondaryStage.setScene(UIColection.solutionScene(Session.user.getTickets().get(selectionModel.getSelectedIndex())));
         	secondaryStage.setResizable(false);
         	secondaryStage.setTitle("MIU help desk");
         	secondaryStage.show();
         	
-        	
+        }
+    	catch (ArrayIndexOutOfBoundsException e)
+    	{
+    		alert("select a ticket");
+    	} 	
         	
         	
         }
@@ -542,7 +564,7 @@ public static Scene ajentScene() {
 	
 
 	
-	public static Scene solutionScene() {
+	public static Scene solutionScene(Ticket t) {
 		
 		
 		Label label= new Label("Solution");
@@ -551,7 +573,7 @@ public static Scene ajentScene() {
 		
 		
 		
-		TextArea textarea=new TextArea();
+		TextArea textarea=new TextArea(t.getId()+"");
 
 
 		 
@@ -559,6 +581,40 @@ public static Scene ajentScene() {
 		
 		Button btn1 = new Button("Solve");
 		Button btn2 = new Button("Calncel");
+		
+		
+		
+		
+		btn1.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	       
+	        	t.setSolution(textarea.getText());
+	        	try {
+					new DataAccessFacade().solveTicket(t);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	        	
+	        	  Stage stage = (Stage) btn2.getScene().getWindow();
+	        	  stage.close();
+	        	
+	        	
+	        }
+	    });
+		
+		
+		
+		btn2.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	       
+	        	  Stage stage = (Stage) btn2.getScene().getWindow();
+	        	  stage.close();
+	        	
+	        	
+	        }
+	    });
 		
 		HBox buttonBox = new HBox(15);     // sets spacing
 		buttonBox.getChildren().addAll(btn1,btn2);
@@ -578,7 +634,7 @@ public static Scene ajentScene() {
 		return new Scene(vbox1);
 	}
 	
-
+	
 	
 	public static Scene createScene() {
 		
@@ -595,9 +651,42 @@ public static Scene ajentScene() {
 		 
 	
 		
-		Button btn1 = new Button("Solve");
+		Button btn1 = new Button("Create");
 		Button btn2 = new Button("Calncel");
 		
+		
+		btn1.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	        	
+	        	Ticket t=new Ticket(0,textField.getText(), textarea.getText(), Session.user);
+	        	try {
+					new DataAccessFacade().saveTicket(t);
+				} catch (SQLException e) {
+					
+					e.printStackTrace();
+				}
+	        	
+	        	 Stage stage = (Stage) btn2.getScene().getWindow();
+	        	  stage.close();
+	        	  alert("Ticket Registerd!! we will contact you soon",AlertType.INFORMATION);
+	        	
+	        	
+	        }
+
+			
+	    });
+		
+		btn2.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	       
+	        	  Stage stage = (Stage) btn2.getScene().getWindow();
+	        	  stage.close();
+	        	
+	        	
+	        }
+	    });
 		HBox buttonBox = new HBox(15);     // sets spacing
 		buttonBox.getChildren().addAll(btn1,btn2);
 		buttonBox.setAlignment(Pos.TOP_RIGHT);
@@ -647,28 +736,28 @@ public static Scene ajentScene() {
 	            	
 	            		DataAccess d=new DataAccessFacade();
 	            		
-	            		User u=d.login("sara", "damena");
-	            		
+	            		User u=d.login("addisu", "damena");
+	            		Session.user=u;
 	            		String s1=u.getClass().toString();
 	            		System.out.println();
 						if(s1.equals("class business.Manager")) {
-							Session.manager=(Manager) u;
+							
 							secondaryStage.setScene(UIColection.adminScene());
 							
 						}
 						else if(s1.equals("class business.Client")) {
-							Session.client=(Client) u;
+							
 							secondaryStage.setScene(UIColection.clientScene());
 							
 							
 						}
 					    else if(s1.equals("class business.Agent")) {
-					    	Session.agent=(Agent) u;
+					    	
 					    	secondaryStage.setScene(UIColection.ajentScene());
 					    }
 						else {
 							    System.out.println("No user type");
-							    
+							    Session.user=null;
 						}
 						
 					} catch (SQLException e) {
@@ -713,7 +802,7 @@ public static Scene ajentScene() {
 
 
 
-	public static Scene assignScene() {
+	public static Scene assignScene(Ticket t) {
 		
 		
 	
@@ -725,27 +814,78 @@ public static Scene ajentScene() {
 		Label labeld= new Label("Department");
 		 ComboBox<String> comboBox = new ComboBox<String>();
 
-	        comboBox.getItems().add("Choice 1");
-	        comboBox.getItems().add("Choice 2");
-	        comboBox.getItems().add("Choice 3");
-	        
+	        comboBox.getItems().add("Mentainance");
+	        comboBox.getItems().add("It support");
+	        comboBox.getItems().add("Security");
 	        
 	        ListView<String> listView = new ListView<String>();
+	        
+	        List <Agent>indexAgent = new ArrayList<Agent>();
+	   
+	        
+	     
+	        
+	        	
+	        try {
+				new DataAccessFacade().getAllAgents().stream()
+							.forEach(a->listView.getItems().add(a.getFirstName()+" "+a.getLastName()));
+			} catch (SQLException e1) {
+				
+				e1.printStackTrace();
+			}
+			
 
-	        listView.getItems().add("Item 1");
-	        listView.getItems().add("Item 2");
-	        listView.getItems().add("Item 3");
 
 	    	HBox departmentbox = new HBox(15);     // sets spacing
 	    	departmentbox.getChildren().addAll(labeld,comboBox);
 	    	departmentbox.setAlignment(Pos.TOP_RIGHT);
 			
-			
-		//btn1.setOnAction(e -> System.out.println("Click"));
-		
 		
 		Button btn1 = new Button("Assign");
 		Button btn2 = new Button("Calncel");
+		
+		btn1.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	       try {
+	    	   List <Agent>myagents = new ArrayList<Agent>();
+	    	   myagents=new DataAccessFacade().getAllAgents();
+	        	t.setAgent(myagents.get(listView.getSelectionModel().getSelectedIndex()));
+	        	try {
+					new DataAccessFacade().solveTicket(t);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+	        	
+	        	  Stage stage = (Stage) btn2.getScene().getWindow();
+	        	  stage.close();
+	    	}
+        	catch (ArrayIndexOutOfBoundsException | SQLException e)
+        	{
+        		alert("select a ticket");
+        	}  
+	        	
+	        }
+	    });
+		
+		
+		
+		
+		
+		
+		btn2.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	       
+	        	  Stage stage = (Stage) btn2.getScene().getWindow();
+	        	  stage.close();
+	        	
+	        	
+	        }
+	    });
+		
+		
+		
 		
 		HBox buttonBox = new HBox(15);     // sets spacing
 		buttonBox.getChildren().addAll(btn1,btn2);
@@ -769,7 +909,20 @@ public static Scene ajentScene() {
 	}
 	
 	
+	
+	private static void alert (Object object) {
+		Alert a = new Alert(AlertType.WARNING); 
+		a.setContentText(object+"");
+		 a.show(); 
+	}
 
 	
+	private static void alert(Object object, AlertType i) {
+		Alert a = new Alert(i); 
+		a.setContentText(object+"");
+		 a.show(); 
+		
+	}
+
 	
 }

@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Manager extends User{
-
+	private List<Ticket> myTickets = new ArrayList<>();
+	
 	@Override
 	public
 	List<Ticket> getTickets() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return myTickets;
 	}
 	
 

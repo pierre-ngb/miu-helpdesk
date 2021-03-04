@@ -3,7 +3,6 @@ package dataaccess;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import business.*;
 
@@ -60,7 +59,7 @@ public class DataAccessFacade implements DataAccess{
 			else if (rs.getString("userFlag").equals("AGENT")) {
 				ur = new Agent();
 				ur.setUserName(username);
-				ur.getTickets().addAll(getAgentTickets(ur));
+				ur.getTickets().addAll(getAgentTickets((Agent) ur));
 			}
 			else {
 				ur = new Manager();
@@ -76,30 +75,47 @@ public class DataAccessFacade implements DataAccess{
 	public
 	List<Ticket> getAllTickets() throws SQLException {
 		List<Ticket> tickets = new ArrayList<Ticket>();
-		query = "SELECT * FROM ticket WHERE assignedTo = null";
+		query = "SELECT * FROM ticket WHERE assignedTo = 0";
 		prepare = c.prepareStatement(query);
 		rs = prepare.executeQuery();
 		while (rs.next()) {
-			tickets.add(new Ticket(rs.getString("detail"), rs.getString("detail")
-					, null));
+			tickets.add(new Ticket(rs.getInt("ticketId"),rs.getString("title"), rs.getString("detail")
+					, rs.getString("owner")));
 		}
 		return tickets;
 	}
 
+	public
+	List<Agent> getAllAgents() throws SQLException {
+		List<Agent> agents = new ArrayList<Agent>();
+		query = "SELECT * FROM user WHERE userFlag = ?";
+		prepare = c.prepareStatement(query);
+		prepare.setString(1, "AGENT");
+		rs = prepare.executeQuery();
+		while (rs.next()) {
+			agents.add(new Agent(rs.getString("userName"),rs.getString("firstName"),rs.getString("lastName")));
+		}
+		return agents;
+	}
+
+	
+	
+	
 	@Override
 	public void saveTicket(Ticket t) throws SQLException {
-		query =  "INSERT INTO ticket (status, detail, owner) ";
-		query += "VALUES (?,?,?)";
+		query =  "INSERT INTO ticket (assignedTo,solution,status,title, detail, owner) ";
+		query += "VALUES (0,'',1,?,?,?)";
 		prepare = c.prepareStatement(query);
-		prepare.setString(1, t.getStatus().toString());
+		prepare.setString(1, t.getTitle().toString());
 		prepare.setString(2, t.getDescription());
-		prepare.setString(3, t.getAgent().getUserName());
+		prepare.setString(3, t.getClient().getUserName());
 		prepare.executeUpdate();
 		prepare.close();
 	}
 
 	@Override
 	public void updateStatus(Status st) {
+		
 		
 	}
 
@@ -111,23 +127,40 @@ public class DataAccessFacade implements DataAccess{
 		prepare.setString(1, u.getUserName());
 		rs = prepare.executeQuery();
 		while (rs.next()) {
-			tickets.add(new Ticket(rs.getString("detail"), rs.getString("detail")
+			tickets.add(new Ticket(rs.getInt("ticketId"),rs.getString("title"), rs.getString("detail")
 					, u));
 		}
+		System.out.println(tickets.size());
 		return tickets;
 	}
 	
-	public List<Ticket> getAgentTickets(User u) throws SQLException{
+	public List<Ticket> getAgentTickets(Agent u) throws SQLException{
 		List<Ticket> tickets = new ArrayList<Ticket>();
 		query = "SELECT * FROM ticket WHERE assignedTo =?";
 		prepare = c.prepareStatement(query);
 		prepare.setString(1, u.getUserName());
 		rs = prepare.executeQuery();
 		while (rs.next()) {
-			tickets.add(new Ticket(rs.getString("detail"), rs.getString("detail")
+			tickets.add(new Ticket(rs.getInt("ticketId"),rs.getString("detail"), rs.getString("detail")
 					,u));
 		}
 		return tickets;
+	}
+
+	
+	public void solveTicket(Ticket t) throws SQLException{
+		
+		query = "UPDATE ticket set status=3, solution= ?, assignedTo =? WHERE ticketId =?";
+		prepare = c.prepareStatement(query);
+		prepare.setString(1, t.getSolution());
+		prepare.setString(2, t.getAgent().getUserName());
+		if(t.getAgent()!=null)
+			prepare.setLong(3, t.getId());
+		else
+			prepare.setString(3, "0");
+			
+	    prepare.executeUpdate();
+		
 	}
 
 	
