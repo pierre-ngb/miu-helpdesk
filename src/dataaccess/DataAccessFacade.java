@@ -54,12 +54,18 @@ public class DataAccessFacade implements DataAccess{
 		if(rs.next()) {
 			if(rs.getString("userFlag").equals("CLIENT")) {
 				ur = new Client();
+				ur.setUserName(username);
+				ur.getTickets().addAll(getClientTickets(ur));
 			}
 			else if (rs.getString("userFlag").equals("AGENT")) {
 				ur = new Agent();
+				ur.setUserName(username);
+				ur.getTickets().addAll(getAgentTickets(ur));
 			}
 			else {
 				ur = new Manager();
+				ur.setUserName(username);
+				ur.getTickets().addAll(getAllTickets());
 			}
 		}
 		rs.close();
@@ -67,13 +73,29 @@ public class DataAccessFacade implements DataAccess{
 	}
 
 	@Override
-	public List<Ticket> getAllTickets() {
-		return null;
+	public
+	List<Ticket> getAllTickets() throws SQLException {
+		List<Ticket> tickets = new ArrayList<Ticket>();
+		query = "SELECT * FROM ticket WHERE assignedTo = null";
+		prepare = c.prepareStatement(query);
+		rs = prepare.executeQuery();
+		while (rs.next()) {
+			tickets.add(new Ticket(rs.getString("detail"), rs.getString("detail")
+					, null));
+		}
+		return tickets;
 	}
 
 	@Override
-	public void saveTicket(Ticket t) {
-		query =  "INSERT INTO ticket ";
+	public void saveTicket(Ticket t) throws SQLException {
+		query =  "INSERT INTO ticket (status, detail, owner) ";
+		query += "VALUES (?,?,?)";
+		prepare = c.prepareStatement(query);
+		prepare.setString(1, t.getStatus().toString());
+		prepare.setString(2, t.getDescription());
+		prepare.setString(3, t.getAgent().getUserName());
+		prepare.executeUpdate();
+		prepare.close();
 	}
 
 	@Override
@@ -81,6 +103,32 @@ public class DataAccessFacade implements DataAccess{
 		
 	}
 
+	@Override
+	public List<Ticket> getClientTickets(User u) throws SQLException{
+		List<Ticket> tickets = new ArrayList<Ticket>();
+		query = "SELECT * FROM ticket WHERE owner =?";
+		prepare = c.prepareStatement(query);
+		prepare.setString(1, u.getUserName());
+		rs = prepare.executeQuery();
+		while (rs.next()) {
+			tickets.add(new Ticket(rs.getString("detail"), rs.getString("detail")
+					, u));
+		}
+		return tickets;
+	}
+	
+	public List<Ticket> getAgentTickets(User u) throws SQLException{
+		List<Ticket> tickets = new ArrayList<Ticket>();
+		query = "SELECT * FROM ticket WHERE assignedTo =?";
+		prepare = c.prepareStatement(query);
+		prepare.setString(1, u.getUserName());
+		rs = prepare.executeQuery();
+		while (rs.next()) {
+			tickets.add(new Ticket(rs.getString("detail"), rs.getString("detail")
+					,u));
+		}
+		return tickets;
+	}
 
 	
 

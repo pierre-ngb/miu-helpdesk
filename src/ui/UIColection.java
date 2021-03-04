@@ -26,7 +26,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
-import jdk.internal.dynalink.support.BottomGuardingDynamicLinker;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;

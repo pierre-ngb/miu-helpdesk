@@ -1,11 +1,14 @@
 package business;
 
+import java.util.List;
+
 public abstract class User {
 	
 	private String firstName;
 	private String lastName;
 	private String userName;
 	private String password;
+	private List<Ticket> tickets;
 	
 	public User() {}
 	
@@ -48,6 +51,7 @@ public abstract class User {
 		this.password = password;
 	}
 	
+	public abstract List<Ticket> getTickets();
 	
 
 }

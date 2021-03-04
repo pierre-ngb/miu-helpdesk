@@ -6,14 +6,16 @@ import business.*;
 
 public interface DataAccess {
 
-	public List<User> allUsers() throws SQLException;
+	List<User> allUsers() throws SQLException;
 	
-	public User login(String username, String pw) throws SQLException;
+	User login(String username, String pw) throws SQLException;
 	
-	public List<Ticket> getAllTickets();
+	List<Ticket> getAllTickets() throws SQLException;
 	
-	public void saveTicket(Ticket t) throws SQLException;
+	void saveTicket(Ticket t) throws SQLException;
 	
-	public void updateStatus(Status st);
+	void updateStatus(Status st);
+
+	List<Ticket> getClientTickets(User u) throws SQLException;
 	
 }
