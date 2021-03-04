@@ -73,7 +73,7 @@ public class DataAccessFacade implements DataAccess{
 
 	@Override
 	public void saveTicket(Ticket t) {
-		
+		query =  "INSERT INTO ticket ";
 	}
 
 	@Override
