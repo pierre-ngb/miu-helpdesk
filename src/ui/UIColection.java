@@ -3,9 +3,14 @@ package ui;
 
 import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import business.User;
+import dataaccess.DataAccess;
+import dataaccess.DataAccessFacade;
 
 //import com.sun.org.apache.xpath.internal.functions.FuncStartsWith;
 
@@ -619,6 +624,16 @@ public static Scene ajentScene() {
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 	            @Override
 	            public void handle(ActionEvent event) {
+	            	
+	            	DataAccess d=new DataAccessFacade();
+	            	try {
+						User u=d.login(txtInput.getText(),pasInput.getText());
+						
+					System.out.println(u.getClass());
+					} catch (SQLException e) {
+						System.out.println("wrong");
+					}
+	            	
 	            	
 	            	switch(txtInput.getText()) {
 	            	case "c":secondaryStage.setScene(UIColection.clientScene());break;
