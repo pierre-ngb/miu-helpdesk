@@ -3,7 +3,7 @@ package business;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Agent implements User{
+public class Agent extends User{
 	
 	List<Ticket> myTickets;
 	
