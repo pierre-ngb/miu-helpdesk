@@ -60,12 +60,12 @@ public class DataAccessFacade implements DataAccess{
 			else if (rs.getString("userFlag").equals("AGENT")) {
 				ur = new Agent();
 				ur.setUserName(username);
-				ur.getTickets().addAll(getClientTickets(ur));
+				ur.getTickets().addAll(getAgentTickets(ur));
 			}
 			else {
 				ur = new Manager();
 				ur.setUserName(username);
-				ur.getTickets().addAll(getClientTickets(ur));
+				ur.getTickets().addAll(getAllTickets());
 			}
 		}
 		rs.close();
@@ -73,8 +73,17 @@ public class DataAccessFacade implements DataAccess{
 	}
 
 	@Override
-	public List<Ticket> getAllTickets() {
-		return null;
+	public
+	List<Ticket> getAllTickets() throws SQLException {
+		List<Ticket> tickets = new ArrayList<Ticket>();
+		query = "SELECT * FROM ticket WHERE assignedTo = null";
+		prepare = c.prepareStatement(query);
+		rs = prepare.executeQuery();
+		while (rs.next()) {
+			tickets.add(new Ticket(rs.getString("detail"), rs.getString("detail")
+					, null));
+		}
+		return tickets;
 	}
 
 	@Override
@@ -103,7 +112,20 @@ public class DataAccessFacade implements DataAccess{
 		rs = prepare.executeQuery();
 		while (rs.next()) {
 			tickets.add(new Ticket(rs.getString("detail"), rs.getString("detail")
-					, new Client()));
+					, u));
+		}
+		return tickets;
+	}
+	
+	public List<Ticket> getAgentTickets(User u) throws SQLException{
+		List<Ticket> tickets = new ArrayList<Ticket>();
+		query = "SELECT * FROM ticket WHERE assignedTo =?";
+		prepare = c.prepareStatement(query);
+		prepare.setString(1, u.getUserName());
+		rs = prepare.executeQuery();
+		while (rs.next()) {
+			tickets.add(new Ticket(rs.getString("detail"), rs.getString("detail")
+					,u));
 		}
 		return tickets;
 	}

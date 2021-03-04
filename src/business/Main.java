@@ -17,18 +17,16 @@ public class Main {
 //			e.printStackTrace();
 //		}
 //		System.out.println(ls.size());
-		User s = null;
+		User s = new Client();
 		try {
 			s = da.login("pierrengb", "12345");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
-		try {
-			da.getClientTickets(s).forEach(System.out::println);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+			//da.getClientTickets(s).forEach(System.out::println);
+			s.getTickets().forEach(System.out::println);
+		
 	}
 }

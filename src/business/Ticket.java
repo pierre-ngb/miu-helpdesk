@@ -10,11 +10,10 @@ public class Ticket {
 	private Status status;
 	private String solution;
 	
-	public Ticket(String title,	String description,Client c) {
+	public Ticket(String title,	String description,User c) {
 		this.title = title;
 		this.description = description;
-		this.client = c;	
-		//saveTicket(this);
+		this.client = (Client) c;	
 	}
 	
 	void setAgent(Agent a) {
