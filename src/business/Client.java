@@ -16,6 +16,9 @@ public class Client extends User {
 	public List<Ticket> getTickets(){
 		return myTickets;
 	}
+	public void addTicket(Ticket t) {
+		myTickets.add(t);
+	}
 	
 	
 
