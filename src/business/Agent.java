@@ -9,5 +9,7 @@ public class Agent implements User{
 	public void assignTicket(Ticket t) {
 		myTicket = t;
 	}
+	
+	
 
 }

@@ -16,7 +16,6 @@ public class Ticket {
 	
 	void setAgent(Agent a) {agent = a;}
 	Agent getAgent() {return agent;}
-	
 	void setManager(Manager m) {manager = m ;}
 	Manager getManager() {return manager;}
 	void setStatus(Status s) {status =s;}
