@@ -5,10 +5,11 @@ public class Ticket {
 	private String title;
 	private String description;
 	private Client client;
-	Agent agent ;
-	Manager manager;
-	Status status;
-	String solution;
+	private Agent agent ;
+	private Manager manager;
+	private Status status;
+	private String solution;
+	
 	public Ticket(String title,	String description,Client c) {
 		this.title = title;
 		this.description = description;
