@@ -627,20 +627,11 @@ public static Scene ajentScene() {
 	            	
 	            	DataAccess d=new DataAccessFacade();
 	            	try {
-						User u=d.login(txtInput.getText(),pasInput.getText());
-						
-					System.out.println(u.getClass());
+						User u=d.login(txtInput.getText().toString(),pasInput.getText().toString());
+						System.out.println(u.getClass());
 					} catch (SQLException e) {
-						System.out.println("wrong");
+						System.out.println(e.getMessage());
 					}
-	            	
-	            	
-	            	switch(txtInput.getText()) {
-	            	case "c":secondaryStage.setScene(UIColection.clientScene());break;
-	            	case "aj":secondaryStage.setScene(UIColection.ajentScene());break;
-	            	case "ad":secondaryStage.setScene(UIColection.adminScene());break;
-	            	default:System.out.println("wrong");
-	            	}
 	            	
 	            	secondaryStage.setResizable(false);
 	            	secondaryStage.setTitle("MIU help desk");

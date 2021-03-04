@@ -47,15 +47,15 @@ public class DataAccessFacade implements DataAccess{
 	public User login(String username, String pw) throws SQLException {
 		query = "SELECT * FROM user WHERE userName =? AND passWord=?";
 		prepare = c.prepareStatement(query);
-		prepare.setString(0, username);
-		prepare.setString(1, pw);
+		prepare.setString(1, username);
+		prepare.setString(2, pw);
 		rs = prepare.executeQuery();
 		User ur = null;
 		if(rs.next()) {
-			if(rs.getString("userFlag").equals(Auth.CLIENT)) {
+			if(rs.getString("userFlag").equals("CLIENT")) {
 				ur = new Client();
 			}
-			else if (rs.getString("userFlag").equals(Auth.AGENT)) {
+			else if (rs.getString("userFlag").equals("AGENT")) {
 				ur = new Agent();
 			}
 			else {
