@@ -10,9 +10,9 @@ public class Client extends User {
 //	public void createTicket(String title, String description){
 //		Ticket newTicket = new Ticket(title,description,this);
 //		
+	public Client() {
 		
-		
-//	}
+	}
 	public List<Ticket> getTickets(){
 		return myTickets;
 	}
