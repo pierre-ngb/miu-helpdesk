@@ -4,12 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Agent implements User{
-	Ticket myTicket;
+	
+	List<Ticket> myTickets;
+	
+	public Agent() {
+		myTickets = new ArrayList<Ticket>();
+	}
 	
 	public void assignTicket(Ticket t) {
-		myTicket = t;
+		myTickets.add(t);
 	}
 	
 	
 
+	public List<Ticket> getMyTickets() {
+		return myTickets;
+	}
+
+	
 }
