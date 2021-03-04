@@ -13,6 +13,9 @@ public class Client extends User {
 		
 		
 //	}
+	public List<Ticket> getTickets(){
+		return myTickets;
+	}
 	
 	
 
