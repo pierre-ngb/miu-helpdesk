@@ -27,9 +27,17 @@ public class DataAccessFacade implements DataAccess{
 		}
 		
 		while(rs.next()) {
-			users.add(new Client());
-//			users.add(new Manager());
-//			users.add(new Agent());
+			
+			if(rs.getString("userFlag").equals(Auth.CLIENT)) {
+				users.add(new Client());
+			}
+			else if (rs.getString("userFlag").equals(Auth.AGENT)) {
+				users.add(new Manager());
+			}
+			else {
+				users.add(new Agent());
+			}
+			
 		}
 		st.close();
 		return users;
