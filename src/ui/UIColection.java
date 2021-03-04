@@ -19,6 +19,7 @@ import dataaccess.DataAccessFacade;
 //import com.sun.org.apache.xpath.internal.functions.FuncStartsWith;
 
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -32,9 +33,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -175,32 +178,32 @@ public class UIColection  {
 	
 		
 		
-		
-		 TableView<Person> tableView = new TableView<Person>();
+		 TableView<TicketView> tableView = new TableView<TicketView>();
 
-		 TableColumn<Person, String> firstNameColumn = new TableColumn<>("Ticket Id");
-		 firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("FirstName"));
-		 
-		 TableColumn<Person, String> lastNameColumn = new TableColumn<>("Title");
-		 lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-		 
+		 TableColumn<TicketView, String> firstColumn = new TableColumn<>("Ticet Id");
+		 firstColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
 
-		 TableColumn<Person, String> addresColumn = new TableColumn<>("Status");
-		 addresColumn.setCellValueFactory(new PropertyValueFactory<>("addres"));
+		 TableColumn<TicketView, String> secondColumn = new TableColumn<>("Title");
+		 secondColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+		 TableColumn<TicketView, String> thirdColumn = new TableColumn<>("Title");
+		 thirdColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 		 
 
-		 TableColumn<Person, String> addresColumn2 = new TableColumn<>("Assigned to");
-		 addresColumn.setCellValueFactory(new PropertyValueFactory<>("addres"));
+		    tableView.getColumns().add(firstColumn);
+		    tableView.getColumns().add(secondColumn);
+		    tableView.getColumns().add(thirdColumn);
+		    
+		 /*   
+		 new DataAccessFacade().getAllTickets().stream().forEach(t->{
+			 	tableView.getItems().add(new TicketView(t.getTitle(), t.getDescription()));
+		 	});*/
 		 
-
-		    tableView.getColumns().add(firstNameColumn);
-		    tableView.getColumns().add(lastNameColumn);
-		    tableView.getColumns().add(addresColumn);
-		    tableView.getColumns().add(addresColumn2);
+		 tableView.getItems().add(new TicketView("John", "Doe kjsajg djsagodjkjgksdj agjkdjfjasgdd","max"));
+		 tableView.getItems().add(new TicketView("Jane", "Deer jgksad fkdjgd,a jdgodasdf dgjsdigkjsd","dran"));
 		 
-		 tableView.getItems().add(new Person("John", "Doe","thisdsl"));
-		 tableView.getItems().add(new Person("Jane", "Deer","kjaskdgsd"));
-		 
+		 tableView.setPlaceholder(new Label("No ticket to display"));
+		 tableView.setMinWidth(500);	 
 
 		
 		Button btn1 = new Button("View Detail");
@@ -257,7 +260,7 @@ public class UIColection  {
 		
 		HBox finalBox = new HBox(15);     // sets spacing
 		finalBox.getChildren().addAll(vbox2,vbox1);
-		finalBox.setAlignment(Pos.TOP_RIGHT);
+		finalBox.setAlignment(Pos.TOP_LEFT);
 		
 		
 		VBox vbox3 = new VBox(15);     // sets spacing
@@ -265,7 +268,7 @@ public class UIColection  {
 		vbox3.getChildren().addAll(label, finalBox);
 		
 		
-		return new Scene(vbox3);
+		return new Scene(vbox3,700,500);
 	}
 	
 	
@@ -299,33 +302,40 @@ public static Scene clientScene() {
 		ListView<HBox> ticketListView= new ListView<HBox>();////
 		 TableView<TicketView> tableView = new TableView<TicketView>();
 
-		 TableColumn<TicketView, String> firstNameColumn = new TableColumn<>("Ticet Id");
-		 firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+		 TableColumn<TicketView, String> Column1 = new TableColumn<>("Title");
+		 Column1.setCellValueFactory(new PropertyValueFactory<>("title"));
+
+		 TableColumn<TicketView, String> Column2 = new TableColumn<>("Description");
+		 Column2.setCellValueFactory(new PropertyValueFactory<>("description"));
 		 
-		 TableColumn<TicketView, String> lastNameColumn = new TableColumn<>("Title");
-		 lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+		 TableColumn<TicketView, String> Column3 = new TableColumn<>("Status");
+		 Column3.setCellValueFactory(new PropertyValueFactory<>("status"));
 		 
 
-		    tableView.getColumns().add(firstNameColumn);
-		    tableView.getColumns().add(lastNameColumn);
+		    tableView.getColumns().add(Column1);
+		    tableView.getColumns().add(Column2);
+		    tableView.getColumns().add(Column3);
 		    
 		    
 		 Client c=Session.client;
 		 c.getTickets().stream().forEach(t->{
-			 	tableView.getItems().add(new TicketView(t.getTitle(), t.getDescription()));
+			 	tableView.getItems().add(new TicketView(t.getTitle(), t.getDescription(),t.getStatus().toString()));
 		 	});
+		 
+		 
 		 
 	 tableView.setPlaceholder(new Label("No ticket to display"));
 		 
 
-		/* PropertyValueFactory<Object, Object> factory = new PropertyValueFactory<>("firstName");
+		//PropertyValueFactory<Object, Object> factory = new PropertyValueFactory<>("firstName");
 		 
-		 TableViewSelectionModel<Person> selectionModel = tableView.getSelectionModel();*/
+		 TableViewSelectionModel<TicketView> selectionModel = tableView.getSelectionModel();
 		 
-		/*// set selection mode to only 1 row
-		 selectionModel.setSelectionMode(SelectionMode.SINGLE);*/
+		// set selection mode to only 1 row
+		 selectionModel.setSelectionMode(SelectionMode.SINGLE);
 		 
-		 //ObservableList<Person> selectedItems = selectionModel.getSelectedItems();
+		 ObservableList<TicketView> selectedItems = selectionModel.getSelectedItems();
+		 System.out.println(selectedItems);
 		 
 		// selectionModel.clearSelection();
 		 
@@ -633,26 +643,29 @@ public static Scene ajentScene() {
 	            @Override
 	            public void handle(ActionEvent event) {
 	            	
-	            	DataAccess d=new DataAccessFacade();
 	            	try {
 						//User u=d.login(txtInput.getText().toString(),pasInput.getText().toString());
-	            		User u=d.login("banchi", "damena");
+	            	
+	            		DataAccess d=new DataAccessFacade();
 	            		
-	            		
+	            		User u=d.login("sara", "damena");
 	            		
 	            		String s1=u.getClass().toString();
 	            		System.out.println();
 						if(s1.equals("class business.Manager")) {
-							secondaryStage.setScene(UIColection.adminScene());
 							Session.manager=(Manager) u;
+							secondaryStage.setScene(UIColection.adminScene());
+							
 						}
 						else if(s1.equals("class business.Client")) {
-							secondaryStage.setScene(UIColection.clientScene());
 							Session.client=(Client) u;
+							secondaryStage.setScene(UIColection.clientScene());
+							
+							
 						}
 					    else if(s1.equals("class business.Agent")) {
-					    	secondaryStage.setScene(UIColection.ajentScene());
 					    	Session.agent=(Agent) u;
+					    	secondaryStage.setScene(UIColection.ajentScene());
 					    }
 						else {
 							    System.out.println("No user type");
