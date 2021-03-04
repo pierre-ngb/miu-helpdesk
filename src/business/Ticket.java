@@ -20,16 +20,25 @@ public class Ticket {
 		agent = a;
 		//updateTicket(this);
 	}
-	
 	public Agent getAgent() {
 		return agent;
 	}
 	public void setManager(Manager m) {
 		manager = m ;
-		}
-	public Manager getManager() {return manager;}
-	void setStatus(Status s) {status =s;}
-	Status getStatus() {return status;}
-	void setSolution(String solution) {this.solution = solution;}
-	String getSolution() {return solution;}
+	}
+	public Manager getManager() {
+		return manager;
+	}
+	public void setStatus(Status s) {
+		status =s;
+	}
+	public Status getStatus() {
+		return status;
+	}
+	public void setSolution(String solution) {
+		this.solution = solution;
+	}
+	public String getSolution() {
+		return solution;
+	}
 }
