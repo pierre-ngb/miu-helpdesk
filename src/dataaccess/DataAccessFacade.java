@@ -72,8 +72,12 @@ public class DataAccessFacade implements DataAccess{
 	}
 
 	@Override
-	public void saveTicket(Ticket t) {
-		query =  "INSERT INTO ticket ";
+	public void saveTicket(Ticket t) throws SQLException {
+		query =  "INSERT INTO ticket (status, detail, owner) ";
+		query += "VALUES (?,?,?)";
+		prepare = c.prepareStatement(query);
+		prepare.setString(1, t.getStatus().toString());
+//		prepare.setString(2, t.get);
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package dataaccess;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-
+import java.util.Optional;
 
 import business.Parameters;
 
@@ -16,24 +16,19 @@ public class ConnectionManager {
 		con = null;
 	}
 	
-	public static Connection getConnection() {
+	private static Connection connect() {
 		p = new 
 				Parameters("root", "@Csprl2020",  "jdbc:mysql://localhost/helpdesk", "com.mysql.jdbc.Driver");
-		boolean ok = true;
-//		try {
-//			Class.forName(p.getDriverDB());
-//		} catch (Exception e) {
-//			ok = false;
-//		}
-		
-		if(ok) {
 			try {
 				con = (Connection) DriverManager.getConnection(p.getDbURL()+"?serverTimezone=UTC",
 						p.getUsername(),p.getPassword());
 			} catch (Exception e) {
-				System.out.println(e.getMessage()); 
+				e.printStackTrace(); 
 			}
-		}
 		return con;
+	}
+	
+	public static Connection getConnection() {
+		return Optional.ofNullable(con).orElseGet(ConnectionManager::connect);
 	}
 }
