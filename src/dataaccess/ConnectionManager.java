@@ -18,7 +18,7 @@ public class ConnectionManager {
 	
 	public static Connection getConnection() {
 		p = new 
-				Parameters("root", "@Csprl2020",  "jdbc:mysql://localhost/helpdesk", "com.mysql.jdbc.Driver");
+				Parameters("root", "",  "jdbc:mysql://localhost/helpdesk", "com.mysql.jdbc.Driver");
 		boolean ok = true;
 //		try {
 //			Class.forName(p.getDriverDB());

@@ -20,6 +20,12 @@ public class Ticket {
 		agent = a;
 		//updateTicket(this);
 	}
+	public String getTitle() {
+		return title;
+	}	
+	public String getDescription() {
+		return description;
+	}
 	public Agent getAgent() {
 		return agent;
 	}
