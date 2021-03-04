@@ -787,7 +787,7 @@ public static Scene ajentScene() {
 		
 		
 		
-		return new Scene(vbox2);
+		return new Scene(vbox2,400,250);
 	}
 	
 	

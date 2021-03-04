@@ -12,7 +12,7 @@ public class Login extends Application {
 	
 
 			primaryStage.setScene(UIColection.loginScene(primaryStage));
-			primaryStage.setResizable(false);
+			primaryStage.setResizable(true);
 		    primaryStage.setTitle("MIU help desk");
 		    primaryStage.show();
 	
