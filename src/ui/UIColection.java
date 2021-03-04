@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import business.Agent;
+import business.Client;
+import business.Manager;
+import business.Ticket;
 import business.User;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
@@ -21,6 +25,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
+import jdk.internal.dynalink.support.BottomGuardingDynamicLinker;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -285,29 +290,32 @@ public class UIColection  {
 public static Scene clientScene() {
 		
 		
-		Label label= new Label("Previous Tickets");
+		Label label= new Label("Client Panel");
 		label.setStyle("-fx-font-size:20");
 		// Open tickets
 		
 		
 		
 		ListView<HBox> ticketListView= new ListView<HBox>();////
-		 TableView<Person> tableView = new TableView<Person>();
+		 TableView<TicketView> tableView = new TableView<TicketView>();
 
-		 TableColumn<Person, String> firstNameColumn = new TableColumn<>("Ticet Id");
-		 firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("FirstName"));
+		 TableColumn<TicketView, String> firstNameColumn = new TableColumn<>("Ticet Id");
+		 firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
 		 
-		 TableColumn<Person, String> lastNameColumn = new TableColumn<>("Title`1111111");
-		 lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+		 TableColumn<TicketView, String> lastNameColumn = new TableColumn<>("Title");
+		 lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
 		 
 
 		    tableView.getColumns().add(firstNameColumn);
 		    tableView.getColumns().add(lastNameColumn);
+		    
+		    
+		 Client c=Session.client;
+		 c.getTickets().stream().forEach(t->{
+			 	tableView.getItems().add(new TicketView(t.getTitle(), t.getDescription()));
+		 	});
 		 
-		 tableView.getItems().add(new Person("John", "Doe","asdf"));
-		 tableView.getItems().add(new Person("Jane", "Deer","asdfd"));
-		 
-	//	 tableView.setPlaceholder(new Label("No rows to display"));
+	 tableView.setPlaceholder(new Label("No ticket to display"));
 		 
 
 		/* PropertyValueFactory<Object, Object> factory = new PropertyValueFactory<>("firstName");
@@ -627,8 +635,30 @@ public static Scene ajentScene() {
 	            	
 	            	DataAccess d=new DataAccessFacade();
 	            	try {
-						User u=d.login(txtInput.getText().toString(),pasInput.getText().toString());
-						System.out.println(u.getClass());
+						//User u=d.login(txtInput.getText().toString(),pasInput.getText().toString());
+	            		User u=d.login("banchi", "damena");
+	            		
+	            		
+	            		
+	            		String s1=u.getClass().toString();
+	            		System.out.println();
+						if(s1.equals("class business.Manager")) {
+							secondaryStage.setScene(UIColection.adminScene());
+							Session.manager=(Manager) u;
+						}
+						else if(s1.equals("class business.Client")) {
+							secondaryStage.setScene(UIColection.clientScene());
+							Session.client=(Client) u;
+						}
+					    else if(s1.equals("class business.Agent")) {
+					    	secondaryStage.setScene(UIColection.ajentScene());
+					    	Session.agent=(Agent) u;
+					    }
+						else {
+							    System.out.println("No user type");
+							    
+						}
+						
 					} catch (SQLException e) {
 						System.out.println(e.getMessage());
 					}
