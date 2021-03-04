@@ -18,19 +18,10 @@ public class ConnectionManager {
 	
 	private static Connection connect() {
 		p = new 
-<<<<<<< HEAD
 				Parameters("root", "@Csprl2020",  "jdbc:mysql://localhost/helpdesk", "com.mysql.jdbc.Driver");
-=======
-				Parameters("root", "",  "jdbc:mysql://localhost/helpdesk", "com.mysql.jdbc.Driver");
-		boolean ok = true;
-//		try {
-//			Class.forName(p.getDriverDB());
-//		} catch (Exception e) {
-//			ok = false;
-//		}
+
+		boolean ok = true;		
 		
-		if(ok) {
->>>>>>> 02bdb30b670f35eb4a60791e84ae10cc116e810c
 			try {
 				con = (Connection) DriverManager.getConnection(p.getDbURL()+"?serverTimezone=UTC",
 						p.getUsername(),p.getPassword());

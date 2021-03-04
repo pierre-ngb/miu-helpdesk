@@ -48,4 +48,16 @@ public class Ticket {
 	public String getSolution() {
 		return solution;
 	}
+
+	public Client getClient() {
+		return client;
+	}
+
+	@Override
+	public String toString() {
+		return "Ticket [title=" + title + ", description=" + description + ", status=" + status + "]";
+	}
+	
+	
+	
 }

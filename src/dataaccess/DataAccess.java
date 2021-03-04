@@ -15,5 +15,7 @@ public interface DataAccess {
 	public void saveTicket(Ticket t) throws SQLException;
 	
 	public void updateStatus(Status st);
+
+	public List<Ticket> getClientTickets(User u) throws SQLException;
 	
 }

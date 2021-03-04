@@ -54,12 +54,18 @@ public class DataAccessFacade implements DataAccess{
 		if(rs.next()) {
 			if(rs.getString("userFlag").equals("CLIENT")) {
 				ur = new Client();
+				ur.setUserName(username);
+				ur.getTickets().addAll(getClientTickets(ur));
 			}
 			else if (rs.getString("userFlag").equals("AGENT")) {
 				ur = new Agent();
+				ur.setUserName(username);
+				ur.getTickets().addAll(getClientTickets(ur));
 			}
 			else {
 				ur = new Manager();
+				ur.setUserName(username);
+				ur.getTickets().addAll(getClientTickets(ur));
 			}
 		}
 		rs.close();
@@ -77,7 +83,10 @@ public class DataAccessFacade implements DataAccess{
 		query += "VALUES (?,?,?)";
 		prepare = c.prepareStatement(query);
 		prepare.setString(1, t.getStatus().toString());
-//		prepare.setString(2, t.get);
+		prepare.setString(2, t.getDescription());
+		prepare.setString(3, t.getAgent().getUserName());
+		prepare.executeUpdate();
+		prepare.close();
 	}
 
 	@Override
@@ -85,6 +94,19 @@ public class DataAccessFacade implements DataAccess{
 		
 	}
 
+	@Override
+	public List<Ticket> getClientTickets(User u) throws SQLException{
+		List<Ticket> tickets = new ArrayList<Ticket>();
+		query = "SELECT * FROM ticket WHERE owner =?";
+		prepare = c.prepareStatement(query);
+		prepare.setString(1, u.getUserName());
+		rs = prepare.executeQuery();
+		while (rs.next()) {
+			tickets.add(new Ticket(rs.getString("detail"), rs.getString("detail")
+					, new Client()));
+		}
+		return tickets;
+	}
 
 	
 

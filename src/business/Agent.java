@@ -17,7 +17,9 @@ public class Agent extends User{
 	
 	
 
-	public List<Ticket> getMyTickets() {
+	@Override
+	public List<Ticket> getTickets() {
+		// TODO Auto-generated method stub
 		return myTickets;
 	}
 
