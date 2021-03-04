@@ -2,9 +2,9 @@ package business;
 import dataaccess.DataAccess.*;
 import java.util.List;
 public class Ticket {
-	String title;
-	String description;
-	Client client;
+	private String title;
+	private String description;
+	private Client client;
 	Agent agent ;
 	Manager manager;
 	Status status;
@@ -20,9 +20,14 @@ public class Ticket {
 		agent = a;
 		//updateTicket(this);
 	}
-	Agent getAgent() {return agent;}
-	void setManager(Manager m) {manager = m ;}
-	Manager getManager() {return manager;}
+	
+	public Agent getAgent() {
+		return agent;
+	}
+	public void setManager(Manager m) {
+		manager = m ;
+		}
+	public Manager getManager() {return manager;}
 	void setStatus(Status s) {status =s;}
 	Status getStatus() {return status;}
 	void setSolution(String solution) {this.solution = solution;}

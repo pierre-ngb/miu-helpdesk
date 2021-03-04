@@ -28,8 +28,8 @@ public class DataAccessFacade implements DataAccess{
 		
 		while(rs.next()) {
 			users.add(new Client());
-			users.add(new Manager());
-			users.add(new Agent());
+//			users.add(new Manager());
+//			users.add(new Agent());
 		}
 		st.close();
 		return users;
@@ -37,17 +37,17 @@ public class DataAccessFacade implements DataAccess{
 
 	@Override
 	public User login(String username, String pw) throws SQLException {
-		query = "SELECT * FROM users WHERE username =? AND password=?";
+		query = "SELECT * FROM user WHERE userName =? AND passWord=?";
 		prepare = c.prepareStatement(query);
 		prepare.setString(0, username);
 		prepare.setString(1, pw);
 		rs = prepare.executeQuery();
 		User ur = null;
 		if(rs.next()) {
-			if(rs.getString("flag").equals(Auth.CLIENT)) {
+			if(rs.getString("userFlag").equals(Auth.CLIENT)) {
 				ur = new Client();
 			}
-			else if (rs.getString("flag").equals(Auth.AGENT)) {
+			else if (rs.getString("userFlag").equals(Auth.AGENT)) {
 				ur = new Agent();
 			}
 			else {

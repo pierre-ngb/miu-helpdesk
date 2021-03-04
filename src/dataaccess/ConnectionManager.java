@@ -18,17 +18,17 @@ public class ConnectionManager {
 	
 	public static Connection getConnection() {
 		p = new 
-				Parameters("root", "",  "jdbc:mysql://localhost/", "org.gjt.mm.mysql.Driver");
+				Parameters("root", "@Csprl2020",  "jdbc:mysql://localhost/helpdesk", "com.mysql.jdbc.Driver");
 		boolean ok = true;
-		try {
-			Class.forName(p.getDriverDB());
-		} catch (Exception e) {
-			ok = false;
-		}
+//		try {
+//			Class.forName(p.getDriverDB());
+//		} catch (Exception e) {
+//			ok = false;
+//		}
 		
 		if(ok) {
 			try {
-				con = (Connection) DriverManager.getConnection(p.getDbURL(),
+				con = (Connection) DriverManager.getConnection(p.getDbURL()+"?serverTimezone=UTC",
 						p.getUsername(),p.getPassword());
 			} catch (Exception e) {
 				System.out.println(e.getMessage()); 
