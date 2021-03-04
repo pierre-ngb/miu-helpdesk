@@ -1,6 +1,10 @@
 package business;
 
+import java.util.List;
 public class Ticket {
+	static List<Ticket> getAllTickets(){
+		return readAllTickets();	
+	}
 	String title;
 	String description;
 	Client client;
@@ -11,10 +15,15 @@ public class Ticket {
 	public Ticket(String title,	String description,Client c) {
 		this.title = title;
 		this.description = description;
-		this.client = c;		
+		this.client = c;
+		
+		saveTicket(this);
 	}
 	
-	void setAgent(Agent a) {agent = a;}
+	void setAgent(Agent a) {
+		agent = a;
+		
+	}
 	Agent getAgent() {return agent;}
 	void setManager(Manager m) {manager = m ;}
 	Manager getManager() {return manager;}
